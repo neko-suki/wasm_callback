@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Go wasm</title>
+</head>
+
+<body>
+	<script src="wasm_exec.js"></script>
+	<script>
+		const go = new Go();
+		WebAssembly.instantiateStreaming(fetch("callback.wasm"), go.importObject).then((result) => {
+			go.run(result.instance);
+		});
+
+		function TestJson(){
+			var test_json = {
+				"val" : 1,
+				"str" : "abcde",
+				"float" : 0.5
+			}
+			CheckJson(test_json)
+		}
+
+		function TestCallback(){
+			var config = {
+				"val": 101,
+				"callback": (twice) => {
+					console.log("callback is called")
+					console.log(twice)
+				}
+			}
+			Callback(config)
+		}
+
+			var hoge = 1
+			function TestCallback2(){
+				var fuga = 0 // not acceptable
+
+				var config = {
+					"val": 101,
+					"callback": (twice) => {
+						console.log("callback is called")
+						console.log("hoge = ",hoge)
+						console.log("fuga = ", fuga)
+					}
+				}			
+				config.callback(config.val*2)
+				Callback(config)
+			}
+	</script>
+	<button onClick="TestJson()" id="test">json test</button></br>
+    <button onClick="TestCallback()" id="test">callback test</button><br>
+    <button onClick="TestCallback2()" id="test">callback test2</button><br>
+	</body>
+</html>
