@@ -23,34 +23,47 @@
 		}
 
 		function TestCallback(){
-			var config = {
+			var test_json = {
 				"val": 101,
 				"callback": (twice) => {
 					console.log("callback is called")
 					console.log(twice)
 				}
 			}
-			Callback(config)
+			Callback(test_json)
 		}
 
-			var hoge = 1
-			function TestCallback2(){
-				var fuga = 0 // not acceptable
-
-				var config = {
-					"val": 101,
-					"callback": (twice) => {
-						console.log("callback is called")
-						console.log("hoge = ",hoge)
-						console.log("fuga = ", fuga)
-					}
-				}			
-				config.callback(config.val*2)
-				Callback(config)
+		function TestPassFunc(){
+			var test_json = {
+				"val": 101,
 			}
+			var callback = (twice) => {
+					console.log("callback is called")
+					console.log(twice)
+			}
+
+			PassFunc(test_json, callback)
+		}
+
+		var hoge = 1
+		function TestScope(){
+			var fuga = 0 // not acceptable
+
+			var test_json = {
+				"val": 101,
+				"callback": (twice) => {
+					console.log("callback is called")
+					console.log("hoge = ",hoge)
+					console.log("fuga = ", fuga)
+				}
+			}			
+			test_json.callback(test_json.val*2)
+			Callback(test_json)
+		}
 	</script>
 	<button onClick="TestJson()" id="test">json test</button></br>
     <button onClick="TestCallback()" id="test">callback test</button><br>
-    <button onClick="TestCallback2()" id="test">callback test2</button><br>
+    <button onClick="TestPassFunc()" id="test">pass func test</button><br>
+	<button onClick="TestScope()" id="test">scope test</button><br>
 	</body>
 </html>

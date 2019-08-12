@@ -53,16 +53,28 @@ func getJSFuncFromString(function string) js.Value {
 }
 
 func Callback(this js.Value, args []js.Value) interface{} {
-	var config TestStruct
-	unmarshalJSONwithCallback(args[0], &config)
-	callback := getJSFuncFromString(config.Callback)
-	callback.Invoke(js.ValueOf(config.Val * 2))
+	var testStruct TestStruct
+	unmarshalJSONwithCallback(args[0], &testStruct)
+	callback := getJSFuncFromString(testStruct.Callback)
+	callback.Invoke(js.ValueOf(testStruct.Val * 2))
+	return nil
+}
+
+type TestStruct2 struct {
+	Val int `json:"val"`
+}
+
+func PassFunc(this js.Value, args []js.Value) interface{} {
+	var testStruct TestStruct2
+	unmarshalJSONwithCallback(args[0], &testStruct)
+	args[1].Invoke(js.ValueOf(testStruct.Val * 2))
 	return nil
 }
 
 func registerCallbacks() {
 	js.Global().Set("Callback", js.FuncOf(Callback))
 	js.Global().Set("CheckJson", js.FuncOf(CheckJSON))
+	js.Global().Set("PassFunc", js.FuncOf(PassFunc))
 }
 
 func main() {
